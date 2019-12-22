@@ -425,11 +425,6 @@ void FSimulator::Process()
 		if (LastEvent.Type != ESimEventType::None)
 		{
 			double dt = 0.0;
-			//Nao faço ideia do porque funciona xD, o valor parece com N ao inves de Nq
-			//if (CurrentEvent.Type != ESimEventType::Arrival)
-			//{
-				//dt = CurrentEvent.Time - LastEvent.Time;;
-			//}
 
 			if(EventList.Num())
 				dt = EventList[0].Time - LastEvent.Time;
