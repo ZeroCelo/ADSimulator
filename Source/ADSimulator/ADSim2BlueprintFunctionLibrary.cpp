@@ -13,6 +13,8 @@
 #include "Runtime/Core/Public/Misc/FileHelper.h"
 #include "Runtime/Core/Public/Misc/Paths.h"
 
+DEFINE_LOG_CATEGORY(Metric2);
+
 bool UADSim2BlueprintFunctionLibrary::IsInEditor()
 {
 #if WITH_EDITOR
@@ -75,6 +77,7 @@ void FSimMetricData::LastRoundW1(int32 SimIndex)
 {
 	if (RoundW1.IsValidIndex(SimIndex))
 	{
+		RoundW1[SimIndex].Pop();
 		if (RoundW1[SimIndex].Num())
 			SimW1[SimIndex].AddValue(RoundW1[SimIndex].Last().GetAverage());
 
@@ -91,8 +94,9 @@ void FSimMetricData::LastRoundNq1(int32 SimIndex)
 {
 	if (RoundNq1.IsValidIndex(SimIndex))
 	{
-		if (RoundNq1[SimIndex].Num())
-			SimNq1[SimIndex].AddValue(RoundNq1[SimIndex].Last().GetAverage());
+		RoundNq1[SimIndex].Pop();
+		//if (RoundNq1[SimIndex].Num())
+			//SimNq1[SimIndex].AddValue(RoundNq1[SimIndex].Last().GetAverage());
 
 		SimNq1ChartData[0].Points[SimIndex].Coords.Y = SimNq1[SimIndex].GetAveragef();
 		SimNq1ChartData[1].Points[SimIndex].Coords.Y = SimNq1[SimIndex].GetICLowerf();
@@ -130,10 +134,19 @@ void FSimMetricData::AddRoundNq1(int32 SimIndex)
 	if (RoundNq1.IsValidIndex(SimIndex))
 	{
 		double LastRoundTime = 0.0;
-		if (RoundNq1[SimIndex].Num()) {
+		if (RoundNq1[SimIndex].Num()) 
+		{
 			SimNq1[SimIndex].AddValue(RoundNq1[SimIndex].Last().GetAverage());
 			LastRoundTime = RoundNq1[SimIndex].Last().GetTimeEnd();
+			UE_LOG(Metric2, Log, TEXT("FSimMetric[AddRoundNq1] SimNq1[%d] Avg=%.3f, End=%.3f"),
+				SimIndex, RoundNq1[SimIndex].Last().GetAverage(), RoundNq1[SimIndex].Last().GetTimeEnd()
+			);
 		}
+		else
+		{
+			LastRoundTime = TransNq1[SimIndex].GetTimeEnd();
+		}
+		
 		RoundNq1[SimIndex].Add(FSampleTimeSum());
 		RoundNq1[SimIndex].Last().SetTimeBegin(LastRoundTime);
 

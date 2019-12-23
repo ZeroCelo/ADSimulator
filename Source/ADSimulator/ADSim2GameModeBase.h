@@ -147,6 +147,13 @@ struct FSimEvent
 
 	bool operator <(const FSimEvent& OtherEvent) const
 	{
+		if (Time == OtherEvent.Time)
+		{
+			if (Type == ESimEventType::ServiceOut && OtherEvent.Type != Type)
+			{
+				return true;
+			}
+		}
 		return Time < OtherEvent.Time;
 		//return OtherEvent.Time < Time;
 	}

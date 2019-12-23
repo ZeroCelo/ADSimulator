@@ -101,6 +101,35 @@ void AADSim2Pawn::CheckThread()
 			{
 				MainWidgetObj->SetChartRange();
 			}
+
+#if WITH_EDITOR
+			//Test do Nq
+			for (int32 i = 0; i < Simulations.Num(); ++i)
+			{
+				double Trans_ENq = Simulations[i].Metric1->TransNq1[i].GetAverage();
+				double Trans_Begin = Simulations[i].Metric1->TransNq1[i].GetTimeBegin();
+				double Trans_End = Simulations[i].Metric1->TransNq1[i].GetTimeEnd();
+				UE_LOG(PawnLog2, Log, TEXT("Pawn2[CheckThread] Sim[%d] TransientNq={Begin=%.2f,End=%.2f, E[Nq]=%.2f}"), 
+					i, Trans_Begin, Trans_End,	Trans_ENq
+				);
+				FSampleSum Test_ENq;
+				for (int32 j = 0; j < Simulations[i].Metric1->RoundNq1[i].Num(); ++j)
+				{
+					double Round_ENq = Simulations[i].Metric1->RoundNq1[i][j].GetAverage();
+					double Round_Begin = Simulations[i].Metric1->RoundNq1[i][j].GetTimeBegin();
+					double Round_End = Simulations[i].Metric1->RoundNq1[i][j].GetTimeEnd();
+					//if(j != (Simulations[i].Metric1->RoundNq1[i].Num() - 1))
+						Test_ENq.AddValue(Round_ENq);
+					UE_LOG(PawnLog2, Log, TEXT("Pawn2[CheckThread] Sim[%d] RoundNq[%d]={Begin=%.2f,End=%.2f, E[Nq]=%.2f}"),
+						i, j, Round_Begin, Round_End, Round_ENq
+					);
+				}
+
+				UE_LOG(PawnLog2, Log, TEXT("Pawn2[CheckThread] Sim[%d] SimNq={Test=%.3f, SimNq=%.3f}"),
+					i, Test_ENq.GetAverage(), Simulations[i].Metric1->SimNq1[i].GetAverage()
+				);
+			}
+#endif
 		}
 	}
 }

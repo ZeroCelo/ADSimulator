@@ -265,7 +265,14 @@ float FSimulator::GetAnalyticENq1()
 	float EW1 = GetAnalyticEW1();
 	if (!SysQueue.bLCFS1 && SysQueue.bOnlyQueue1)
 	{
+		/*float EX1 = 1.0f / Config.ServiceParam1.Value;
+		float EX2 = 1.0f / Config.ServiceParam2.Value;
+		float rho1 = Config.ArrivalParam1.Value*EX1;
+		float rho2 = Config.ArrivalParam2.Value*EX2;
+		float rho = rho1 + rho2;*/
+
 		float ENq1 = lambda1 * EW1;
+		//ENq1 += rho;
 		return ENq1;
 	}
 	else if (!SysQueue.bLCFS1 && !SysQueue.bOnlyQueue1)
@@ -428,6 +435,9 @@ void FSimulator::Process()
 
 			if(EventList.Num())
 				dt = EventList[0].Time - LastEvent.Time;
+
+			//if(LastEvent.Type != ESimEventType::Arrival)
+				//dt = CurrentEvent.Time - LastEvent.Time;
 			
 			double Nq1Value = SysQueue.NumQueue1();
 			double Nq2Value = SysQueue.NumQueue2();
@@ -561,7 +571,7 @@ void FSimulator::ProcessServiceOut()
 
 	double W = OutClient.GetWaitTime();
 
-	if (OutClient.ClientRound == 0)
+	if (OutClient.ClientRound == 0 && CurrentRound == 0)
 	{
 		//Metricas Transient
 		if (OutClient.Priority == 0)
@@ -611,9 +621,10 @@ void FSimulator::ProcessServiceOut()
 	} 
 	else 
 	{
+		UE_LOG(SimulatorLog2, Log, TEXT("FSim[ProcSvcOut] OutClient{Rnd=%d,Ite=%d,Pri=%d"), OutClient.ClientRound, OutClient.ClientIteration, OutClient.Priority);
+		
 		if (OutClient.ClientRound == CurrentRound)
 		{
-			UE_LOG(SimulatorLog2, Log, TEXT("FSim[ProcSvcOut] OutClient{Rnd=%d,Ite=%d,Pri=%d"), OutClient.ClientRound, OutClient.ClientIteration, OutClient.Priority);
 			//Metricas
 			if (OutClient.Priority == 0)
 			{
@@ -662,7 +673,6 @@ void FSimulator::ProcessServiceOut()
 			}
 		}
 	}	
-	TestEnding();
 }
 
 void FSimulator::SaveRoundDump()

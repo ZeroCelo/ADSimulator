@@ -18,6 +18,8 @@
 
 #include "ADSim2BlueprintFunctionLibrary.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Metric2, Log, All);
+
 USTRUCT(BlueprintType)
 struct FSimParameter
 {
