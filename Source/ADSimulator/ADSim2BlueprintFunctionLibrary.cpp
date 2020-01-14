@@ -265,7 +265,7 @@ void FSimMetricData::SetupDataW1(FString NameStr, int32 MaxSim)
 		RoundW1ChartData.Last().Name = FText::FromString(*GetSampleNameString(NameStr, i));
 		
 		SimW1ChartData[0].Points.Add(FKantanCartesianDatapoint());
-		SimW1ChartData[0].Points.Last().Coords.Set(i,0.0f);
+		SimW1ChartData[0].Points.Last().Coords.Set(i,0.0f);	//O "i" deveria ser o lambda1 correspondente
 		SimW1ChartData[1].Points.Add(FKantanCartesianDatapoint());
 		SimW1ChartData[1].Points.Last().Coords.Set(i, 0.0f);
 		SimW1ChartData[2].Points.Add(FKantanCartesianDatapoint());

@@ -270,6 +270,8 @@ struct FFileSetting
 	{
 		bSaveSimDump = true;
 		bSaveRoundDump = true;
+		bSaveIterationDump = false;
+		bSaveRoundDump = false;
 		SimDump = TEXT("SimDump");
 		RoundDump = TEXT("RoundDump");
 		IterationDump = TEXT("IterationDump");
@@ -352,6 +354,7 @@ struct FSimConfig
 	}
 
 	FSimConfig() {
+		TransientIterations = 0;
 		Iterations = 2500;
 		Rounds = 3200;
 		ServiceParam1.Value = 1.0f;

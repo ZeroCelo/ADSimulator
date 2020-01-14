@@ -89,7 +89,8 @@ struct FSimQueue
 	FSimClient PopClient(); //Pega próximo cliente da fila de espera e remove da fila
 	void AddClient(FSimClient& Cli);
 
-	bool HasClient() { return Queue1.Num() + Queue2.Num(); }
+	bool HasClient() { return (bool)(Queue1.Num() + Queue2.Num()); }
+	//bool HasClient() { return Queue1.Num() + Queue2.Num(); }
 	int32 NumClient() { return Queue1.Num() + Queue2.Num(); }
 	int32 NumQueue1() { return Queue1.Num(); }
 	int32 NumQueue2() { return Queue2.Num(); }
